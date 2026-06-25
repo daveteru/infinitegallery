@@ -18,27 +18,27 @@ export default function Dragtesting() {
   const ROWS = 5;
 
   const items = [
-    { client: "Andy & Cindy", type: "Wedding", url: "/Artboard 12.png" },
-    { client: "Kevin & Yenny", type: "Pre-wedding", url: "/test1.png" },
+    { client: "Andy & Cindy", type: "Wedding", url: "/Artboard 12.webp" },
+    { client: "Kevin & Yenny", type: "Pre-wedding", url: "/test1.webp" },
     {
       client: "Ishak & Neysa",
       type: "Wedding",
-      url: "/Artboard 2 copy 18.png",
+      url: "/Artboard 2 copy 18.webp",
     },
     {
       client: "Reginald & Liz",
       type: "Wedding",
-      url: "/Artboard 2 copy 31.png",
+      url: "/Artboard 2 copy 31.webp",
     },
     {
       client: "Joseph & Maria",
       type: "Japan Prewedding",
-      url: "/Artboard 2.png",
+      url: "/Artboard 2.webp",
     },
     {
       client: "Jonathan & Irene",
       type: "Prewedding",
-      url: "/Artboard 2 copy 12.png",
+      url: "/Artboard 2 copy 12.webp",
     },
   ];
 
@@ -185,7 +185,7 @@ export default function Dragtesting() {
         className="w-screen h-screen flex items-center justify-center "
       >
         <img
-          src="/Solune-Logo-White-.png"
+          src="/Solune-Logo-White-.webp"
           alt=""
           className="absolute z-30 w-40 bottom-0 left-0 pointer-event-none"
         />
