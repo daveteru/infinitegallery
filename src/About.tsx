@@ -23,21 +23,28 @@ export default function About() {
       ref={pageRef}
       className="bg-black w-screen h-screen flex justify-center items-center text-white"
     >
-      <div className="flex gap-10">
-        <div className="w-100 h-100 bg-neutral-300"> test </div>
-        <p className="w-100 flex flex-col gap-5">
+      <div className="flex flex-col lg:flex-row gap-10">
+        <div className="w-screen lg:w-100 h-fit bg-neutral-300 ">
+          {" "}
+          <img src="/1.webp" alt="" className="w-full h-full object-cover inset-0"/>
+        </div>
+        <p className="w-screen h-fit px-5 py-10 bg-black lg:w-100 flex flex-col gap-5">
           <h1 className="text-xl">
             Hello! this is a sample page on the infinite gallery
           </h1>{" "}
           <hr />
-          developed by teru - 
-
-          halaman ini menjadi contoh untuk efek transisi antar halaman saat berpindah
-          halaman
-    <hr />
-          infinite gallery ini adalah sebuah example template design unutk website portfolio / gallery cocok untuk creative designer / photographer & multimedia artists
-        <a href="https://www.github.com/daveteru" className="hover:underline">Contact : GitHub</a>
-        <a href="mailto:daveteru@gmail.com" className="hover:underline">Email : daveteru@gmail.com</a>
+          developed by teru - halaman ini menjadi contoh untuk efek transisi
+          antar halaman saat berpindah halaman
+          <hr />
+          infinite gallery ini adalah sebuah example template design unutk
+          website portfolio / gallery cocok untuk creative designer /
+          photographer & multimedia artists
+          <a href="https://www.github.com/daveteru" className="hover:underline">
+            Contact : GitHub
+          </a>
+          <a href="mailto:daveteru@gmail.com" className="hover:underline">
+            Email : daveteru@gmail.com
+          </a>
         </p>
       </div>
     </div>
