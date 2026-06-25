@@ -82,7 +82,6 @@ export default function Dragtesting() {
   useGSAP(
     () => {
       const frames = gsap.utils.toArray(".layer");
-      const frames2 = gsap.utils.toArray(".layer2");
       const speed = 0.05;
 
       const setters = frames.map((frame: any) => ({
