@@ -1,13 +1,13 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Draggable, InertiaPlugin } from "gsap/all";
-import { useRef } from "react";
+import { useRef, type RefObject } from "react";
 import { useOutletContext } from "react-router";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
 
 export default function Dragtesting() {
-  const { pageRef } = useOutletContext<{ pageRef: React.RefObject<HTMLDivElement> }>();
+  const { pageRef } = useOutletContext<{ pageRef: RefObject<HTMLDivElement> }>();
   const boxRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const winX = window.innerWidth;
@@ -112,7 +112,7 @@ export default function Dragtesting() {
         <img
           src="/Solune-Logo-White-.png"
           alt=""
-          className="absolute z-30 w-40 pointer-event-none"
+          className="absolute z-30 w-40 bottom-0 left-0 pointer-event-none"
         />
         <div
           ref={containerRef}
@@ -129,13 +129,13 @@ export default function Dragtesting() {
                   <div
                     key={c}
                     style={{ width: `${winX}px`, height: `${winY}px` }}
-                    className="shrink-0 grid grid-cols-3 relative"
+                    className="shrink-0 grid grid-cols-2 lg:grid-cols-3 relative"
                   >
                     {items.map((it, idx) => (
                       <div className="group  h-fit w-fit">
                         <div
                           key={idx}
-                          className={`${idx % 2 === 0 ? "w-60 h-80" : "w-80 h-60"} layer bg-neutral-200  text-black flex justify-center overflow-hidden items-center`}
+                          className={`${idx % 2 === 0 ? "w-30 lg:w-60 lg:h-80 " : "w-40 lg:w-80"} layer bg-neutral-200  text-black flex justify-center overflow-hidden items-center`}
                         >
                           <img
                             src={it.url}
