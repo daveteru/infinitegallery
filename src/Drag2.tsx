@@ -1,13 +1,15 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { Draggable, InertiaPlugin } from "gsap/all";
+import { Draggable, InertiaPlugin, Observer } from "gsap/all";
 import { useRef, type RefObject } from "react";
 import { useOutletContext } from "react-router";
 
-gsap.registerPlugin(Draggable, InertiaPlugin);
+gsap.registerPlugin(Draggable, InertiaPlugin, Observer);
 
 export default function Dragtesting() {
-  const { pageRef } = useOutletContext<{ pageRef: RefObject<HTMLDivElement> }>();
+  const { pageRef } = useOutletContext<{
+    pageRef: RefObject<HTMLDivElement>;
+  }>();
   const boxRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const winX = window.innerWidth;
@@ -40,6 +42,7 @@ export default function Dragtesting() {
     },
   ];
 
+  const pos = useRef({ x: 0, y: 0 });
 
   useGSAP(
     () => {
@@ -57,24 +60,96 @@ export default function Dragtesting() {
       const wrapX = gsap.utils.wrap(-winX, 0);
       const wrapY = gsap.utils.wrap(-winY, 0);
 
-      Draggable.create(boxRef.current, {
+      // Applies the current pos to the DOM through the wrap. Everything that
+      // moves the grid funnels through here so drag + scroll never fight.
+      const render = () => {
+        gsap.set(boxRef.current, {
+          x: wrapX(pos.current.x),
+          y: wrapY(pos.current.y),
+        });
+      };
+
+      // --- DRAG ---------------------------------------------------------
+      const draggable = Draggable.create(boxRef.current, {
         trigger: containerRef.current,
         type: "x,y",
-        inertia: { x: { min: -winX, max: 0 }, y: { min: -winY, max: 0 } },
-        liveSnap: false,
+        inertia: true,
+        // Keep Draggable's internal x/y in sync with our pos so a new drag
+        // picks up exactly where scroll (or the previous throw) left off.
+        onPress() {
+          gsap.set(this.target, { x: pos.current.x, y: pos.current.y });
+          this.update();
+        },
         onDrag() {
-          gsap.set(boxRef.current, {
-            x: wrapX(this.x),
-            y: wrapY(this.y),
-          });
+          pos.current.x = this.x;
+          pos.current.y = this.y;
+          render();
         },
         onThrowUpdate() {
-          gsap.set(boxRef.current, {
-            x: wrapX(this.x),
-            y: wrapY(this.y),
+          pos.current.x = this.x;
+          pos.current.y = this.y;
+          render();
+        },
+      })[0];
+
+      // --- SCROLL (momentum nudge) -------------------------------------
+      // A tiny tween object we animate toward the target offset, so wheel
+      // ticks feel like inertia rather than a hard jump.
+      const scrollProxy = { x: 0, y: 0 };
+      let scrollTween: gsap.core.Tween | null = null;
+
+      const scrollObserver = Observer.create({
+        target: containerRef.current,
+        type: "wheel,touch",
+        // Don't hijack touch-drag — Draggable already owns pointer drags.
+        // Observer here is mainly for wheel / trackpad.
+        onChangeY(self) {
+          // If a throw is mid-flight, stop it so scroll takes over cleanly.
+          draggable.tween?.kill();
+
+          scrollProxy.x = pos.current.x;
+          scrollProxy.y = pos.current.y;
+
+          // deltaY: scroll down -> grid moves up (negative y), like natural scroll
+          const targetY = pos.current.y - self.deltaY;
+
+          scrollTween?.kill();
+          scrollTween = gsap.to(scrollProxy, {
+            y: targetY,
+            duration: 0.8,
+            ease: "power3.out",
+            onUpdate() {
+              pos.current.y = scrollProxy.y;
+              render();
+            },
+          });
+        },
+        // Optional: horizontal wheel / shift-scroll feeds x
+        onChangeX(self) {
+          draggable.tween?.kill();
+          scrollProxy.x = pos.current.x;
+          scrollProxy.y = pos.current.y;
+          const targetX = pos.current.x - self.deltaX;
+          scrollTween?.kill();
+          scrollTween = gsap.to(scrollProxy, {
+            x: targetX,
+            duration: 0.8,
+            ease: "power3.out",
+            onUpdate() {
+              pos.current.x = scrollProxy.x;
+              render();
+            },
           });
         },
       });
+
+      render();
+
+      return () => {
+        draggable.kill();
+        scrollObserver.kill();
+        scrollTween?.kill();
+      };
     },
     { scope: containerRef },
   );

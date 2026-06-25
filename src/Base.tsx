@@ -29,9 +29,7 @@ export default function Base() {
           </ul>
           <ul 
           onClick={() => handlePageChange("/")}
-          className="hover:underline">Portfolio</ul>
-          <ul className="hover:underline">Contact</ul>
-          <ul className="hover:underline">Packages</ul>
+          className="hover:underline">Home</ul>
         </li>
       </div>
       <Outlet context={{ pageRef }} />
